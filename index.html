@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff9ea">
+  <title>BÖKS | Coding before reading</title>
+  <meta name="description" content="BÖKS is a gentle coding game for children who cannot read yet.">
+  <meta name="boks-landing-version" content="landing-reference-inspired-v8-20260603">
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://boksgame.app/">
+  <meta property="og:title" content="BÖKS | Coding before reading">
+  <meta property="og:description" content="A gentle coding game for children who can't read yet. No reading, no typing — just drag blocks and play.">
+  <meta property="og:image" content="https://boksgame.app/play/screenshots/home-wide.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BÖKS | Coding before reading">
+  <meta name="twitter:description" content="A gentle coding game for children who can't read yet. No reading, no typing — just drag blocks and play.">
+  <meta name="twitter:image" content="https://boksgame.app/play/screenshots/home-wide.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "Lilita One";
+      src: url("play/assets/fonts/LilitaOne-Regular.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    :root {
+      --paper: #fff9ea;
+      --cream: #fffdf5;
+      --panel: rgba(255, 249, 234, 0.9);
+      --edge: #d2c9b4;
+      --ink: #123d24;
+      --body: #233026;
+      --muted: #6b604d;
+      --green: #1f9b24;
+      --green-dark: #18711e;
+      --blue: #2b8fd4;
+      --yellow: #fdb515;
+      --red: #f51c24;
+      --grid: rgba(205, 211, 202, 0.34);
+      --shadow: rgba(95, 78, 52, 0.15);
+      --max: 1180px;
+      --radius: 24px;
+      --step-0: clamp(0.95rem, 0.91rem + 0.2vw, 1.04rem);
+      --step-1: clamp(1.1rem, 1.02rem + 0.36vw, 1.28rem);
+      --step-2: clamp(1.58rem, 1.34rem + 1vw, 2.12rem);
+      --step-3: clamp(2.55rem, 1.78rem + 3.3vw, 4.5rem);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      color: var(--body);
+      font-family: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+      font-size: var(--step-0);
+      line-height: 1.52;
+      background:
+        radial-gradient(circle at 86% 12%, rgba(105, 183, 100, 0.16), transparent 22rem),
+        radial-gradient(circle at 14% 4%, rgba(253, 181, 21, 0.16), transparent 18rem),
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        #fff9ea;
+      background-size: auto, auto, 28px 28px, 28px 28px, auto;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 0 8px;
+    }
+
+    .nav__logo {
+      width: clamp(96px, 24vw, 140px);
+    }
+
+    .nav__links {
+      display: none;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 11px 18px;
+      border: 2px solid rgba(22, 113, 30, 0.2);
+      border-radius: 16px;
+      color: #fffdf7;
+      font-weight: 800;
+      background: linear-gradient(180deg, #35b433 0%, var(--green) 100%);
+      box-shadow: 0 5px 0 #14701a, 0 16px 26px rgba(31, 155, 36, 0.2);
+    }
+
+    .button--quiet {
+      color: #143d25;
+      border-color: rgba(210, 201, 180, 0.92);
+      background: rgba(255, 253, 247, 0.92);
+      box-shadow: 0 4px 0 #cdc2ab, 0 12px 18px rgba(95, 78, 52, 0.12);
+    }
+
+    .button--play {
+      border-color: rgba(20, 61, 37, 0.18);
+      color: #143d25;
+      background: linear-gradient(180deg, #ffd65c 0%, var(--yellow) 100%);
+      box-shadow: 0 5px 0 #d8920f, 0 16px 26px rgba(253, 181, 21, 0.2);
+    }
+
+    .button--primary {
+      min-height: 52px;
+      padding: 14px 28px;
+      border-radius: 17px;
+      font-size: 1.02rem;
+    }
+
+    .button__icon {
+      color: var(--green-dark);
+      font-size: 0.92em;
+    }
+
+    .hero {
+      position: relative;
+      padding: 24px 0 28px;
+    }
+
+    .hero__grid {
+      display: grid;
+      gap: 30px;
+      align-items: center;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.02;
+    }
+
+    h1,
+    h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 800;
+      letter-spacing: -0.045em;
+    }
+
+    h1 {
+      max-width: 11ch;
+      font-size: var(--step-3);
+    }
+
+    h2 {
+      font-size: var(--step-2);
+      text-align: center;
+    }
+
+    h3 {
+      font-size: var(--step-1);
+      font-weight: 800;
+    }
+
+    p { margin: 0; }
+
+    .underline {
+      display: block;
+      width: min(250px, 70vw);
+      height: 8px;
+      margin: 10px 0 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--yellow), #ffd65c);
+      transform: rotate(-2deg);
+    }
+
+    .hero__lead {
+      max-width: 31rem;
+      margin-top: 18px;
+      color: #14241b;
+      font-size: clamp(1.12rem, 1.02rem + 0.55vw, 1.45rem);
+      font-weight: 600;
+      line-height: 1.28;
+    }
+
+    .hero__lead strong {
+      color: var(--green-dark);
+    }
+
+    .feature-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      max-width: 430px;
+      margin: 20px 0 0;
+    }
+
+    .feature {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #405140;
+    }
+
+    .feature__bubble {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--green-dark);
+      background: rgba(232, 246, 212, 0.88);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+    }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .tablet {
+      position: relative;
+      padding: 12px;
+      border: 12px solid #181812;
+      border-radius: 32px;
+      background: #181812;
+      box-shadow: 0 22px 45px rgba(56, 42, 23, 0.24);
+      transform: rotate(2deg);
+    }
+
+    .tablet::after {
+      content: "";
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      width: 5px;
+      height: 34px;
+      border-radius: 999px;
+      background: #34342b;
+      transform: translateY(-50%);
+    }
+
+    .tablet img,
+    .tablet video {
+      display: block;
+      width: 100%;
+      border-radius: 16px;
+      background: #cfeaa5;
+    }
+
+    .section {
+      padding: 40px 0;
+    }
+
+    .section__title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .title-logo {
+      display: inline-block;
+      width: 2.35em;
+      vertical-align: -0.24em;
+      filter: drop-shadow(0 0.08em 0 rgba(95, 78, 52, 0.12));
+    }
+
+    .section__title::before,
+    .section__title::after {
+      content: "⌁";
+      color: var(--green);
+      font-family: "Lilita One", cursive;
+      font-size: 1.2rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .step-card {
+      position: relative;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      border: 2px solid rgba(226, 218, 199, 0.94);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.88);
+      box-shadow: 0 4px 0 #ded4bd, 0 18px 30px rgba(95, 78, 52, 0.1);
+      overflow: hidden;
+    }
+
+    .step-number {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      font-weight: 800;
+      background: var(--green);
+      box-shadow: 0 3px 0 rgba(95, 78, 52, 0.18);
+    }
+
+    .step-card:nth-child(1) .step-number { background: var(--yellow); }
+    .step-card:nth-child(3) .step-number { background: var(--blue); }
+
+    .step-card__head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .step-card p {
+      min-height: 5em;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .step-card img {
+      width: 100%;
+      height: 340px;
+      margin-top: auto;
+      padding-top: 14px;
+      border-radius: 14px;
+      object-fit: contain;
+      object-position: center top;
+      background:
+        linear-gradient(rgba(205, 211, 202, 0.28) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(205, 211, 202, 0.28) 1px, transparent 1px),
+        #f6fbef;
+      background-size: 22px 22px;
+      box-shadow: 0 3px 0 #cdc2ab;
+    }
+
+    .worlds {
+      padding: 18px;
+      border: 2px solid rgba(226, 218, 199, 0.94);
+      border-radius: 26px;
+      background: rgba(255, 253, 247, 0.7);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .world-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .world-card {
+      border-radius: 18px;
+      border: 2px solid rgba(210, 201, 180, 0.65);
+      overflow: hidden;
+      box-shadow: 0 4px 0 #cdc2ab;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .world-card__scene {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+    }
+
+    .world-card__scene img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center center;
+    }
+
+
+    .world-card__label {
+      padding: 10px 14px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: var(--ink);
+    }
+
+    .world-card--meadow .world-card__scene { background: #b8e08a; }
+    .world-card--desert .world-card__scene { background: #f5d67a; }
+    .world-card--ice .world-card__scene { background: #c8eaf8; }
+    .world-card--night .world-card__scene { background: #1a2a38; }
+
+    .world-card--meadow .world-card__label { background: #e8f6d4; }
+    .world-card--desert .world-card__label { background: #fef0c0; }
+    .world-card--ice .world-card__label { background: #daf0fb; }
+    .world-card--night .world-card__label { background: #243040; color: #b8d4e8; }
+
+    .lifestyle {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 2px solid rgba(210, 201, 180, 0.65);
+      box-shadow: 0 5px 0 #cdc2ab, 0 22px 40px rgba(95, 78, 52, 0.14);
+    }
+
+    .lifestyle__img {
+      display: block;
+      width: 100%;
+      object-fit: cover;
+      object-position: center center;
+      max-height: 480px;
+    }
+
+    .lifestyle__text {
+      padding: 28px 24px;
+      background: rgba(255, 253, 247, 0.96);
+    }
+
+    .lifestyle__text h2 {
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .lifestyle__text p {
+      color: #2a3c2e;
+      font-size: clamp(1rem, 0.94rem + 0.28vw, 1.12rem);
+      font-weight: 500;
+      line-height: 1.58;
+      margin-top: 10px;
+    }
+
+    .lifestyle__text p:first-of-type { margin-top: 0; }
+
+    @media (min-width: 740px) {
+      .lifestyle {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+
+      .lifestyle__img {
+        max-height: none;
+        height: 100%;
+        min-height: 440px;
+      }
+
+      .lifestyle__text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 48px 44px;
+      }
+    }
+
+    .creator-card {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+      padding: 28px;
+      border: 2px solid rgba(226, 218, 199, 0.94);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.88);
+      box-shadow: 0 4px 0 #ded4bd, 0 18px 30px rgba(95, 78, 52, 0.1);
+    }
+
+    .creator-card__portrait {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .creator-card__portrait img {
+      width: min(72vw, 220px);
+      border-radius: 20px;
+      display: block;
+    }
+
+    .creator-card__portrait-placeholder {
+      width: min(72vw, 220px);
+      aspect-ratio: 1;
+      border-radius: 20px;
+      background: radial-gradient(circle at 40% 32%, rgba(255,255,255,0.72), transparent 58%), #cfeaa5;
+      display: grid;
+      place-items: center;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(3rem, 12vw, 5rem);
+      font-weight: 800;
+      color: var(--green-dark);
+      letter-spacing: -0.04em;
+    }
+
+    .creator-card__text h2 {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .creator-card__text p {
+      color: #2a3c2e;
+      font-size: clamp(1rem, 1vw + 0.85rem, 1.18rem);
+      font-weight: 500;
+      line-height: 1.55;
+      margin-top: 10px;
+    }
+
+    .creator-card__text p:first-of-type {
+      margin-top: 0;
+    }
+
+    @media (min-width: 640px) {
+      .creator-card {
+        grid-template-columns: auto 1fr;
+      }
+    }
+
+    .testimonial-row {
+      display: grid;
+      gap: 14px;
+    }
+
+    .quote {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 253, 247, 0.86);
+      box-shadow: 0 4px 0 #ded4bd, 0 14px 24px rgba(95, 78, 52, 0.08);
+    }
+
+    .quote strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .cta {
+      padding: 28px 18px;
+      border: 2px solid rgba(114, 164, 72, 0.42);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 8% 24%, rgba(255,255,255,0.52), transparent 11rem),
+        linear-gradient(180deg, #d7efba 0%, #b7e48c 100%);
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.6), 0 5px 0 #9bbf75, 0 22px 36px rgba(95, 78, 52, 0.12);
+      text-align: center;
+    }
+
+    .cta img {
+      width: 92px;
+      margin: 0 auto 12px;
+      filter: drop-shadow(0 10px 12px rgba(57, 39, 14, 0.14));
+    }
+
+    .cta__lead {
+      max-width: 52ch;
+      margin: 10px auto 0;
+      font-size: clamp(1rem, 0.95rem + 0.25vw, 1.12rem);
+      font-weight: 600;
+      line-height: 1.5;
+      color: #1e3a25;
+    }
+
+    .cta__note {
+      display: inline-block;
+      margin: 10px auto 0;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(114, 164, 72, 0.3);
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #2a5c34;
+    }
+
+    .cta__contact {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2a5c34;
+    }
+
+    .cta__contact a {
+      color: var(--green-dark);
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .form {
+      display: grid;
+      gap: 12px;
+      max-width: 620px;
+      margin: 18px auto 0;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      text-align: left;
+      color: #6b593f;
+      font-weight: 800;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 2px solid #d7ccb4;
+      border-radius: 16px;
+      padding: 12px 13px;
+      color: var(--body);
+      font: inherit;
+      background: #fffdf5;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 104px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #c7ae77;
+      box-shadow: 0 0 0 3px rgba(212, 188, 68, 0.16);
+    }
+
+    .footer {
+      padding: 40px 0 44px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--edge);
+    }
+
+    .footer__inner {
+      display: grid;
+      gap: 20px;
+      align-items: center;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .footer img {
+      width: 82px;
+    }
+
+    .footer__contact {
+      display: grid;
+      gap: 6px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .footer__contact p {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .footer__contact a {
+      color: var(--green-dark);
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .footer__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .version-pill {
+      display: none;
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      z-index: 50;
+      padding: 7px 10px;
+      border: 1px solid rgba(210, 201, 180, 0.9);
+      border-radius: 999px;
+      color: #6e5a3f;
+      font-size: 0.68rem;
+      font-weight: 800;
+      background: rgba(255, 253, 247, 0.88);
+      box-shadow: 0 3px 10px rgba(95, 78, 52, 0.12);
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .dev-mode .version-pill {
+      display: block;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .faq-item {
+      border: 2px solid rgba(226, 218, 199, 0.94);
+      border-radius: 18px;
+      background: rgba(255, 253, 247, 0.86);
+      box-shadow: 0 4px 0 #ded4bd;
+      overflow: hidden;
+    }
+
+    .faq-item summary {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      font-weight: 800;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    .faq-item summary::-webkit-details-marker { display: none; }
+
+    .faq-item summary::after {
+      content: "+";
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #e8f6d4;
+      color: var(--green-dark);
+      font-size: 1.1rem;
+      font-weight: 800;
+      transition: transform 0.2s;
+    }
+
+    .faq-item[open] summary::after {
+      transform: rotate(45deg);
+    }
+
+    .faq-item__body {
+      padding: 0 20px 16px;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    @media (min-width: 740px) {
+      .shell {
+        width: min(var(--max), calc(100% - 56px));
+      }
+
+      .nav {
+        grid-template-columns: auto 1fr;
+      }
+
+      .nav__links {
+        display: flex;
+        justify-content: center;
+        gap: 34px;
+        color: #0e1711;
+        font-weight: 700;
+      }
+
+      .hero {
+        padding-top: 32px;
+      }
+
+      .hero__grid {
+        grid-template-columns: 0.86fr 1.14fr;
+      }
+
+      .steps,
+      .info-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .world-strip {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .maker-row {
+        grid-template-columns: 1fr 0.7fr;
+      }
+
+      .testimonial-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer__inner {
+        grid-template-columns: auto 1fr auto auto auto;
+        justify-items: start;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- BOKS_LANDING_VERSION: landing-reference-inspired-v8-20260603 -->
+  <header>
+    <nav class="shell nav" aria-label="Main navigation">
+      <a href="#top" aria-label="BÖKS home">
+        <img class="nav__logo" src="play/assets/ui/brand/boks-logo.svg?v=landing-reference-inspired-v8-20260603" alt="BÖKS">
+      </a>
+      <div class="nav__links" aria-label="Sections">
+        <a href="#maker">About</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero__grid">
+        <div>
+          <h1>Where problem solving begins.</h1>
+          <span class="underline" aria-hidden="true"></span>
+          <p class="hero__lead">A playful adventure that helps young children become confident problem solvers.</p>
+          <div class="feature-row" aria-label="Product highlights">
+            <div class="feature">
+              <span class="feature__bubble">🚫</span>
+              <span>No ads</span>
+            </div>
+            <div class="feature">
+              <span class="feature__bubble">🎮</span>
+              <span>Easy to start</span>
+            </div>
+          </div>
+          <div class="hero__actions">
+            <a class="button button--play button--primary" href="https://figura8.github.io/boks/">Play BÖKS <span class="button__icon" aria-hidden="true">▶</span></a>
+            <a class="button button--quiet" href="#form">Join the Playtest</a>
+          </div>
+        </div>
+        <div class="tablet" aria-label="BÖKS running on a tablet">
+          <img src="play/screenshots/demo_image.png" alt="Screenshot of the BÖKS game">
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <div class="shell">
+        <div class="section__title">
+          <h2>Children don't need words to learn how to think.</h2>
+        </div>
+        <div class="steps">
+          <article class="step-card">
+            <div class="step-card__head">
+              <span class="step-number">🌱</span>
+              <h3>Curiosity first</h3>
+            </div>
+            <p>Young children are natural explorers. They try things, notice what happens, and try again. That's not just play — that's thinking.</p>
+            <img src="play/screenshots/drag-blocks.png?v=drag-v2" alt="A child dragging blocks in BÖKS">
+          </article>
+          <article class="step-card">
+            <div class="step-card__head">
+              <span class="step-number">💛</span>
+              <h3>Mistakes are the point</h3>
+            </div>
+            <p>In BÖKS, there's no wrong answer — just a new clue. Children learn to adjust, experiment, and keep going. Confidence grows one small step at a time.</p>
+            <img src="play/screenshots/press-play.png?v=play-v1" alt="BÖKS in action after pressing play">
+          </article>
+          <article class="step-card">
+            <div class="step-card__head">
+              <span class="step-number">✨</span>
+              <h3>Real thinking, real early</h3>
+            </div>
+            <p>Long before they can read a word, children can break a big problem into small steps and feel the joy of solving it themselves.</p>
+            <img src="play/screenshots/solve-puzzles.png?v=puzzle-v1" alt="A child solving a puzzle in BÖKS">
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell worlds">
+        <h2>Little worlds to explore.</h2>
+        <div class="world-strip" aria-label="BÖKS world previews">
+
+          <!-- MEADOW -->
+          <div class="world-card world-card--meadow">
+            <div class="world-card__scene" aria-label="Meadow world gameplay">
+              <img src="play/screenshots/meadow_word.png" alt="BÖKS nel mondo Prato">
+            </div>
+            <div class="world-card__label">🌿 Meadow</div>
+          </div>
+
+          <!-- DESERT -->
+          <div class="world-card world-card--desert">
+            <div class="world-card__scene" aria-label="Desert world gameplay">
+              <img src="play/screenshots/desert_word.png" alt="BÖKS nel mondo Deserto">
+            </div>
+            <div class="world-card__label">🏜️ Desert</div>
+          </div>
+
+          <!-- ICE -->
+          <div class="world-card world-card--ice">
+            <div class="world-card__scene" aria-label="Ice world gameplay">
+              <img src="play/screenshots/ice_word.png" alt="BÖKS nel mondo Ghiaccio">
+            </div>
+            <div class="world-card__label">❄️ Ice</div>
+          </div>
+
+          <!-- NIGHT -->
+          <div class="world-card world-card--night">
+            <div class="world-card__scene" aria-label="Night world gameplay">
+              <img src="play/screenshots/night_word.png" alt="BÖKS nel mondo Notte">
+            </div>
+            <div class="world-card__label" style="background:#243040;color:#b8d4e8;">🌙 Night</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="lifestyle">
+          <img class="lifestyle__img" src="play/screenshots/kid_photo_01.png" alt="A young child playing BÖKS on a tablet">
+          <div class="lifestyle__text">
+            <h2>Learning through play.</h2>
+            <p>Children don't need words to learn how to think.</p>
+            <p>They learn by exploring, experimenting and discovering what happens next.</p>
+            <p>BÖKS helps young children build confidence one small puzzle at a time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="maker" class="section">
+      <div class="shell">
+        <div class="section__title">
+          <h2>Meet the creator.</h2>
+        </div>
+        <article class="creator-card">
+          <div class="creator-card__portrait">
+            <img src="play/screenshots/photo_Maurizio.png" alt="Maurizio, creator of BÖKS">
+          </div>
+          <div class="creator-card__text">
+            <p>Hi, I'm Maurizio.</p>
+            <p>I'm a professional game developer and father of a young daughter.</p>
+            <p>I created BÖKS because I believe children can learn problem solving long before they learn to read.</p>
+            <p>I wanted to build something calm, playful and approachable — a first step into logical thinking that feels like play, not school.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+
+    <section id="form" class="section">
+      <div class="shell cta">
+        <img src="play/assets/characters/boks_green/base-right-green.svg" alt="Green BÖKS character">
+        <h2>Join our first families.</h2>
+        <p class="cta__lead">We're looking for families and schools who want to help shape BÖKS before launch.<br>Your feedback will directly influence the future of the game.</p>
+        <form class="form" action="https://formspree.io/f/xojzernk" method="POST">
+          <label class="field">
+            Name
+            <input type="text" name="name" autocomplete="name" placeholder="Your name" required>
+          </label>
+          <label class="field">
+            Email
+            <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+          </label>
+          <label class="field">
+            Who will be playing BÖKS?
+            <textarea name="message" placeholder="Tell us about your child, classroom or school."></textarea>
+          </label>
+          <button class="button" type="submit">Join the Playtest</button>
+        </form>
+        <p class="cta__contact">Questions before joining? <a href="mailto:hello@boksgame.app">hello@boksgame.app</a></p>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <div class="shell">
+        <div class="section__title">
+          <h2>FAQ</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>What age is BÖKS designed for?</summary>
+            <p class="faq-item__body">BÖKS is designed for children aged 4 to 7. The game uses only visual symbols — no reading or typing required — so even a 4-year-old can play independently.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Do children need to know how to read?</summary>
+            <p class="faq-item__body">No. BÖKS is built entirely around visual block commands and animated feedback. There is no text to read during gameplay.</p>
+          </details>
+          <details class="faq-item">
+            <summary>What devices does BÖKS run on?</summary>
+            <p class="faq-item__body">BÖKS runs in the browser on tablets, iPads, and modern smartphones. No app download is needed — just open the link and play.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Is BÖKS free?</summary>
+            <p class="faq-item__body">During the playtest phase, BÖKS is completely free for selected families and schools. Early access members will also receive a special offer when the full version launches.</p>
+          </details>
+          <details class="faq-item">
+            <summary>How does the school programme work?</summary>
+            <p class="faq-item__body">We're looking for primary schools to test BÖKS with classes of children aged 4-7. Schools get free access, a short teacher guide, and a feedback session with the creator. Fill in the form above to express interest.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Is it safe? Are there ads?</summary>
+            <p class="faq-item__body">BÖKS has no ads, no in-app purchases, and no social features. It is a closed, self-contained experience designed to be safe for young children.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <img src="play/assets/ui/brand/boks-logo.svg?v=landing-reference-inspired-v8-20260603" alt="BÖKS">
+      <div class="footer__contact">
+        <p>Questions, feedback, or interested in playtesting BÖKS?</p>
+        <a href="mailto:hello@boksgame.app">hello@boksgame.app</a>
+      </div>
+      <div class="footer__meta">
+        <span>Made with ❤️ in Cornwall, UK</span>
+        <span>© 2026 BÖKS. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+  <div class="version-pill" aria-hidden="true">Updated: reference v8</div>
+
+  <script>
+    (() => {
+      // Show version-pill only on localhost / dev
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.search.includes('dev')) {
+        document.body.classList.add('dev-mode');
+      }
+
+      const cleanupKey = 'boks-landing-cache-cleaned-v8';
+      if (!('serviceWorker' in navigator) || sessionStorage.getItem(cleanupKey) === 'true') return;
+      sessionStorage.setItem(cleanupKey, 'true');
+      window.addEventListener('load', async () => {
+        try {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(registrations.map(registration => registration.unregister()));
+          if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+          }
+        } catch (error) {
+          console.warn('BOKS cache cleanup skipped', error);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
