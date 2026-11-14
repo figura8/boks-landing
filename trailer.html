@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#fff9ea">
+<title>Watch BÖKS in action | BÖKS</title>
+<meta name="description" content="See how BÖKS helps children discover sequencing and problem-solving through play.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Watch BÖKS in action">
+<meta property="og:description" content="Discover the BÖKS classroom playtest.">
+<meta property="og:url" content="https://boksgame.app/trailer.html">
+<style>
+:root{color-scheme:light;font-family:Arial,Helvetica,sans-serif;color:#173c27;background:#fff9ea}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh}
+header{padding:22px clamp(20px,5vw,64px);background:#fffdf5;border-bottom:1px solid #e7dfca}
+header a{color:#173c27;text-decoration:none;font-size:26px;font-weight:800;letter-spacing:.02em}
+main{max-width:960px;margin:36px auto;padding:0 20px;text-align:center}
+h1{font-size:clamp(30px,5vw,50px);line-height:1.12;margin:0 0 16px}
+p{line-height:1.6;font-size:17px;margin:0 0 28px}
+.player{position:relative;aspect-ratio:16/9;background:#142d20;border-radius:18px;overflow:hidden;box-shadow:0 16px 48px #153b2530}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:30px auto}
+.actions a{display:inline-block;padding:14px 23px;border-radius:40px;text-decoration:none;font-weight:700;background:#173c27;color:white}
+.actions a.secondary{background:#e9ecdb;color:#173c27}
+footer{text-align:center;color:#506556;font-size:13px;padding:20px}
+</style>
+</head>
+<body>
+<header><a href="/">BÖKS</a></header>
+<main>
+<h1>See BÖKS in action</h1>
+<p>A small puzzle game for curious minds. Discover how children can plan, play and try again.</p>
+<div class="player"><iframe id="trailer" title="BÖKS gameplay trailer" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<nav class="actions" aria-label="Next steps">
+<a id="youtubeLink" rel="noopener noreferrer" target="_blank" href="https://www.youtube.com/watch?v=ywkA-j4dre8">Watch on YouTube</a>
+<a class="secondary" href="/">Explore BÖKS</a>
+</nav>
+</main>
+<footer>Made in Cornwall. Built for curious minds.</footer>
+<script>
+(function(){
+  const candidate=new URLSearchParams(location.search).get('v')||'ywkA-j4dre8';
+  const id=/^[A-Za-z0-9_-]{11}$/.test(candidate)?candidate:'ywkA-j4dre8';
+  document.getElementById('trailer').src='https://www.youtube-nocookie.com/embed/'+id+'?rel=0';
+  document.getElementById('youtubeLink').href='https://www.youtube.com/watch?v='+id;
+})();
+</script>
+</body>
+</html>
